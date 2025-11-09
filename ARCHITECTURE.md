@@ -164,37 +164,37 @@ let redoHistory = [];     // Strokes that were undone
 
 Here are the key performance trade-offs we made:
 
-### ✅ Optimistic Rendering
+###Optimistic Rendering
 **What:** Your client draws immediately without waiting for the server.  
 **Why:** Eliminates network latency from the user experience. Drawing feels instant even on slower connections.  
 **Trade-off:** If the server is slow to broadcast, remote users see your drawing slightly delayed.
 
-### ✅ Direct Broadcasting (No Processing)
+###Direct Broadcasting (No Processing)
 **What:** Server receives a drawing segment and immediately broadcasts it with `socket.broadcast.emit()`.  
 **Why:** Minimal server-side processing keeps latency low.  
 **Trade-off:** Server doesn't validate or transform data (clients must trust each other).
 
-### ✅ Separate Cursor Channel
+### Separate Cursor Channel
 **What:** Cursor positions are sent via `cursorMove` events but never persisted to history.  
 **Why:** Cursors update constantly (dozens of times per second). Storing them would bloat history.  
 **Trade-off:** Cursor positions are lost on reconnect (not a problem since they're ephemeral anyway).
 
-### ✅ Full History Replay on Reconnect
+### Full History Replay on Reconnect
 **What:** When you disconnect and come back, server sends the entire `drawingHistory` array.  
 **Why:** Simple and reliable — you're guaranteed to get the complete, correct state.  
 **Trade-off:** Could be slow if there are thousands of strokes (future optimization: send incremental updates or snapshots).
 
-### ✅ Socket.IO Auto-Reconnection
+### Socket.IO Auto-Reconnection
 **What:** Socket.IO handles reconnection logic automatically with exponential backoff.  
 **Why:** We don't have to write custom reconnection code.  
 **Trade-off:** Less control over reconnection strategy.
 
-### ❌ No Batching (Yet)
+###No Batching (Yet)
 **What:** We send every `mousemove` segment individually.  
 **Why:** Simpler initial implementation.  
 **Trade-off:** High-frequency mouse movements generate lots of small messages. Could batch points into arrays and send every 50ms for better network efficiency.
 
-### ❌ No Delta Compression
+###No Delta Compression
 **What:** Points are sent as absolute coordinates (x, y).  
 **Why:** Easier to work with, easier to debug.  
 **Trade-off:** Could save bandwidth by sending deltas (differences from previous point).
