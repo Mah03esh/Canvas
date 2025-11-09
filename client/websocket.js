@@ -80,7 +80,7 @@ class SocketClient {
     // remote cursor updates
     this.socket.on('remoteCursor', (data) => {
       if (this.cursorManager) {
-        this.cursorManager.updateCursor(data.id, data.x, data.y, data.color, data.username);
+        this.cursorManager.updateCursor(data.id, data.x, data.y, data.color, data.username, data.state);
       }
     });
 
@@ -129,8 +129,8 @@ class SocketClient {
     this.socket.emit('stopDrawing');
   }
 
-  emitCursorMove(x, y) {
-    this.socket.emit('cursorMove', { x, y });
+  emitCursorMove(data) {
+    this.socket.emit('cursorMove', data);
   }
 
   emitStartStroke(data) {

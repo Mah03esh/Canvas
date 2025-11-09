@@ -50,6 +50,7 @@ async function initializeApp(username) {
   socketClient.registerCanvas(canvas);
   socketClient.registerCursorManager(cursorManager);
   socketClient.registerUserList(userList);
+  canvas.registerCursorManager(cursorManager);
   cursorManager.init();
   
   try {

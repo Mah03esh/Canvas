@@ -103,7 +103,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('cursorMove', (data) => {
-    // broadcast cursor position with user's color and username
+    // broadcast cursor position with user's color, username, and state
     // If the user hasn't registered yet, ignore cursor updates to avoid errors
     const user = activeUsers[socket.id];
     if (!user) {
@@ -115,7 +115,8 @@ io.on('connection', (socket) => {
       x: data.x,
       y: data.y,
       color: user.color,
-      username: user.username
+      username: user.username,
+      state: data.state
     });
   });
 

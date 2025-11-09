@@ -12,6 +12,8 @@ export class Canvas {
     this.savedColor = 'black'; // remember what color they had before eraser
     this.brushSize = 5;
     this.cachedHistory = []; // cache drawing history for resize
+    this.cursorState = 'moving'; // Track cursor state
+    this.cursorManager = null; // Reference to cursor manager
     this.init();
   }
 
@@ -54,6 +56,14 @@ export class Canvas {
     this.prevX = e.clientX;
     this.prevY = e.clientY;
     
+    // Set cursor state based on tool
+    this.cursorState = (this.activeTool === 'eraser') ? 'erasing' : 'drawing';
+    
+    // Update local cursor state
+    if (this.cursorManager) {
+      this.cursorManager.updateLocalCursor(e.clientX, e.clientY, this.cursorState);
+    }
+    
     socketClient.emitStartStroke({ 
       color: this.currentColor, 
       lineWidth: this.brushSize 
@@ -61,8 +71,21 @@ export class Canvas {
   }
 
   handleMouseMove(e) {
-    // always send cursor position
-    socketClient.emitCursorMove(e.clientX, e.clientY);
+    // Track current mouse position
+    this.mouseX = e.clientX;
+    this.mouseY = e.clientY;
+    
+    // always send cursor position with state
+    socketClient.emitCursorMove({ 
+      x: e.clientX, 
+      y: e.clientY, 
+      state: this.cursorState 
+    });
+    
+    // Update local cursor in cursor manager
+    if (this.cursorManager) {
+      this.cursorManager.updateLocalCursor(e.clientX, e.clientY, this.cursorState);
+    }
     
     if (this.drawing) {
       this.drawSegment(e);
@@ -163,8 +186,19 @@ export class Canvas {
 
   endDrawing() {
     this.drawing = false;
+    this.cursorState = 'moving'; // Reset state when stopping
+    
+    // Update local cursor state
+    if (this.cursorManager) {
+      this.cursorManager.updateLocalCursor(this.mouseX, this.mouseY, this.cursorState);
+    }
+    
     socketClient.emitStopDrawing();
     this.ctx.beginPath();
+  }
+
+  registerCursorManager(manager) {
+    this.cursorManager = manager;
   }
 }
 
