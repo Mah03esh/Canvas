@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Collaborative Canvas</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="/socket.io/socket.io.js"></script>
+  <script type="module" src="main.js"></script>
+</head>
+<body>
+  <!-- Login-->
+  <div id="login-overlay">
+    <div id="login-box">
+      <h2>Welcome to the Canvas</h2>
+      <p>Please enter your name to join:</p>
+      <input type="text" id="username-input" placeholder="Your Name">
+      <button id="join-button">Join</button>
+    </div>
+  </div>
+
+  <h1>Collaborative Canvas</h1>
+  
+  <!-- online users list -->
+  <div id="user-list-container">
+    <h3>Online:</h3>
+    <ul id="user-list"></ul>
+  </div>
+  
+  <!-- drawing canvas (main layer) -->
+  <canvas id="drawing-canvas"></canvas>
+  
+  <!-- cursor overlay (transparent layer on top) -->
+  <canvas id="cursor-canvas"></canvas>
+
+  <!-- Floating tool panels (Tldraw-style simplified) -->
+  <div class="ui-panel" id="tools-panel">
+    <button class="tool-button" id="tool-brush" title="Brush">🎨</button>
+    <button class="tool-button" id="tool-eraser" title="Eraser">🧼</button>
+    <button class="tool-button" id="undo-button" title="Undo">↩️</button>
+    <button class="tool-button" id="redo-button" title="Redo">↪️</button>
+  </div>
+
+  <div class="ui-panel" id="style-panel">
+    <div class="color-grid">
+      <div class="color-swatch" id="color-black" data-color="black" style="background: black;"></div>
+      <div class="color-swatch" id="color-red" data-color="red" style="background: red;"></div>
+      <div class="color-swatch" id="color-blue" data-color="blue" style="background: blue;"></div>
+      <div class="color-swatch" id="color-green" data-color="green" style="background: green;"></div>
+      <div class="color-swatch" id="color-yellow" data-color="yellow" style="background: yellow;"></div>
+      <div class="color-swatch" id="color-orange" data-color="orange" style="background: orange;"></div>
+      <div class="color-swatch" id="color-purple" data-color="purple" style="background: purple;"></div>
+      <div class="color-swatch" id="color-cyan" data-color="cyan" style="background: cyan;"></div>
+    </div>
+    <div class="stroke-slider-container">
+      <input type="range" id="stroke-width" min="1" max="50" value="5" title="Stroke Width">
+    </div>
+  </div>
+</body>
+</html>
