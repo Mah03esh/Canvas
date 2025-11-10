@@ -286,7 +286,3 @@ Some ideas we considered but haven't implemented yet:
 - **Rooms/channels:** Multiple separate canvases instead of one shared space
 - **Vector compression:** Use delta encoding or simplification algorithms
 
----
-
-**Document version:** 1.0 — Reflects actual implementation as of November 2025  
-**Total lines:** ~250 (kept concise and professional as requested)
